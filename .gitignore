@@ -1,0 +1,5 @@
+.env
+caresync-concierge/.env
+.adk/
+.venv/
+__pycache__/
