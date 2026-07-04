@@ -110,7 +110,7 @@ The narration script for presenting this agent is available at [DEMO_SCRIPT.txt]
    git add .
    git commit -m "Initial commit: caresync-concierge ADK agent"
    git branch -M main
-   git remote add origin https://github.com/<your-username>/caresync-concierge.git
+   git remote add origin https://github.com/manvikumari286-dotcom/caresync-concierge.git
    git push -u origin main
    ```
 
