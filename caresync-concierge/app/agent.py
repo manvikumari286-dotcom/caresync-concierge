@@ -64,9 +64,10 @@ medication_agent = Agent(
     name="medication_agent",
     model=Gemini(model=config.model),
     instruction=(
-        "You are a specialized Medication Assistant. You help patients log medications, check dosage instructions, "
-        "and track refills. Summarize the user's medication log or confirm new entries. "
-        "Use the patient's full name (default to 'John Doe' if not specified) to query their medications."
+        "You are a specialized Medication Assistant. You MUST use the appropriate MCP tool "
+        "(like get_patient_medications or update_patient_medication) to check or update the patient's record. "
+        "Do not make up any information. Use the patient's full name (default to 'John Doe' if not specified) "
+        "as the patient_name argument for the tool."
     ),
     tools=[mcp_toolset]
 )
@@ -75,10 +76,9 @@ appointment_agent = Agent(
     name="appointment_agent",
     model=Gemini(model=config.model),
     instruction=(
-        "You are a specialized Appointment Coordinator. You help patients coordinate doctor visits, "
-        "manage schedules, and suggest calendar slots. If a user wants to book or cancel an appointment, "
-        "clarify details and provide options. "
-        "Use the patient's full name (default to 'John Doe' if not specified) to query their appointments."
+        "You are a specialized Appointment Coordinator. You MUST use the appropriate MCP tool "
+        "(like get_appointments) to retrieve doctor appointments. Do not make up any information. "
+        "Use the patient's full name (default to 'John Doe' if not specified) as the patient_name argument for the tool."
     ),
     tools=[mcp_toolset]
 )
@@ -87,9 +87,9 @@ symptom_agent = Agent(
     name="symptom_agent",
     model=Gemini(model=config.model),
     instruction=(
-        "You are a specialized Symptom & Vitals Tracker. You help patients log symptoms (e.g. pain, fatigue) "
-        "and vitals (e.g. blood pressure, glucose). Provide healthy, non-diagnostic insights and summaries. "
-        "Use the patient's full name (default to 'John Doe' if not specified) to log symptoms."
+        "You are a specialized Symptom & Vitals Tracker. You MUST use the appropriate MCP tool "
+        "(like log_patient_symptom) to record the patient's symptoms. "
+        "Use the patient's full name (default to 'John Doe' if not specified) as the patient_name argument for the tool."
     ),
     tools=[mcp_toolset]
 )
@@ -103,10 +103,10 @@ orchestrator = Agent(
     model=Gemini(model=config.model),
     instruction=(
         "You are the CareSync Concierge Orchestrator. Your job is to understand the patient's request and "
-        "delegate it to the appropriate specialized sub-agent (Medication Assistant, Appointment Coordinator, "
-        "or Symptom Tracker) using your tools. "
-        "Once you have gathered the responses from the specialists, synthesize them into a friendly, clear, "
-        "and concise final answer."
+        "delegate it to the appropriate specialized sub-agent (medication_agent, appointment_agent, "
+        "or symptom_agent) using the agent tools. You MUST invoke the corresponding sub-agent tool to process the query. "
+        "Do not answer the user's query yourself; you must delegate it. Once you receive the response from "
+        "the sub-agent, synthesize it into a friendly, clear, and concise final answer."
     ),
     tools=[
         AgentTool(agent=medication_agent),
