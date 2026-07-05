@@ -230,8 +230,8 @@ async def human_approval_node(ctx: Any, node_input: Any) -> Event:
 
 
 @node(name="final_output_node")
-async def final_output_node(ctx: Any, node_input: Any) -> str:
-    return ctx.state.get("final_report") or "No output generated."
+async def final_output_node(ctx: Any, node_input: Any) -> Event:
+    return Event(output=ctx.state.get("final_report") or "No output generated.")
 
 
 # ---------------------------------------------------------------------------
